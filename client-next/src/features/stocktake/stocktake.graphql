@@ -1,0 +1,116 @@
+fragment StocktakeLineRow on StocktakeLineNode {
+  __typename
+  id
+  itemName
+  batch
+  expiryDate
+  packSize
+  snapshotNumberOfPacks
+  countedNumberOfPacks
+  costPricePerPack
+  sellPricePerPack
+  comment
+  reasonOption {
+    __typename
+    id
+    type
+    reason
+  }
+  item {
+    __typename
+    id
+    code
+    name
+  }
+}
+
+fragment ReasonOptionRow on ReasonOptionNode {
+  __typename
+  id
+  type
+  reason
+}
+
+query reasonOptions {
+  reasonOptions(filter: { isActive: true }, page: { first: 1000 }) {
+    ... on ReasonOptionConnector {
+      __typename
+      totalCount
+      nodes {
+        ...ReasonOptionRow
+      }
+    }
+  }
+}
+
+fragment StocktakeRow on StocktakeNode {
+  __typename
+  id
+  stocktakeNumber
+  status
+  description
+  comment
+  isLocked
+}
+
+query stocktakes($storeId: String!) {
+  stocktakes(storeId: $storeId) {
+    ... on StocktakeConnector {
+      __typename
+      totalCount
+      nodes {
+        ...StocktakeRow
+      }
+    }
+  }
+}
+
+query stocktake($storeId: String!, $stocktakeId: String!) {
+  stocktake(id: $stocktakeId, storeId: $storeId) {
+    ... on StocktakeNode {
+      ...StocktakeRow
+    }
+  }
+}
+
+query stocktakeLines($storeId: String!, $stocktakeId: String!, $first: Int) {
+  stocktakeLines(
+    storeId: $storeId
+    stocktakeId: $stocktakeId
+    page: { first: $first }
+  ) {
+    ... on StocktakeLineConnector {
+      __typename
+      totalCount
+      nodes {
+        ...StocktakeLineRow
+      }
+    }
+  }
+}
+
+mutation upsertStocktakeLines(
+  $storeId: String!
+  $updateStocktakeLines: [UpdateStocktakeLineInput!]
+) {
+  batchStocktake(
+    storeId: $storeId
+    input: { updateStocktakeLines: $updateStocktakeLines }
+  ) {
+    ... on BatchStocktakeResponse {
+      __typename
+      updateStocktakeLines {
+        id
+        response {
+          __typename
+          ... on UpdateStocktakeLineError {
+            error {
+              __typename
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+}
