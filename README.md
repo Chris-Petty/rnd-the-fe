@@ -11,7 +11,7 @@
 
 99/89/100/82 lighthouse on 5000+ line stock take release build
 
-old client initial gzip >1MB, this 200KB
+old client initial gzip >1MB, this 200KB could likely be improved, I have some rollup errors.
 
 Slow and horrible to quite fast! Much less cumulative layout shift, when the page loads it just pops in without everything rearranging multiple times.
 
