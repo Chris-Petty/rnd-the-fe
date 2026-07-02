@@ -10,7 +10,9 @@
 6. add line edit modal and new stock take button for stocktakes
 
 99/89/100/82 lighthouse on 5000+ line stock take release build
+
 old client initial gzip >1MB, this 200KB
+
 Slow and horrible to quite fast! Much less cumulative layout shift, when the page loads it just pops in without everything rearranging multiple times.
 
 ### References
